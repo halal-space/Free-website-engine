@@ -1,0 +1,12 @@
+{
+  "rules": {
+    "react/no-danger": "error",
+    "no-restricted-properties": [
+      "error",
+      {
+        "property": "innerHTML",
+        "message": "Direct .innerHTML assignments are strictly forbidden for XSS mitigation (Blueprint §8)."
+      }
+    ]
+  }
+}
