@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getStoreConfig } from '../storefront/services/store-service';
+import { getLocalStorePreset } from '../storefront/config/presets';
 import type { StoreConfig, TemplateId } from '../storefront/types/store';
 
 interface StoreOption {
@@ -64,26 +64,21 @@ export default function StorefrontPreviewPage() {
 
   // Load store config when selected store changes
   useEffect(() => {
-    async function loadStore() {
-      try {
-        const loadedConfig = await getStoreConfig(selectedStoreId);
-        setConfig(loadedConfig);
-        setStoreName(loadedConfig.name);
-        setStoreTagline(loadedConfig.tagline || '');
+    const loadedConfig = getLocalStorePreset(selectedStoreId);
+    if (loadedConfig) {
+      setConfig(loadedConfig);
+      setStoreName(loadedConfig.name);
+      setStoreTagline(loadedConfig.tagline || '');
 
-        const heroSection = loadedConfig.sections.find((s) => s.blockId.includes('hero'));
-        const props = heroSection?.props || {};
+      const heroSection = loadedConfig.sections.find((s) => s.blockId.includes('hero'));
+      const props = heroSection?.props || {};
 
-        setHeroTitle(typeof props.title === 'string' ? props.title : loadedConfig.name);
-        setHeroSubtitle(typeof props.subtitle === 'string' ? props.subtitle : (loadedConfig.tagline || ''));
-        setCtaText(typeof props.ctaText === 'string' ? props.ctaText : 'Explore Now');
-        setCtaLink(typeof props.ctaLink === 'string' ? props.ctaLink : '/shop');
-        setAccentColor(loadedConfig.theme.colorAccent || '#274bff');
-      } catch (err) {
-        console.error('Failed to load store config', err);
-      }
+      setHeroTitle(typeof props.title === 'string' ? props.title : loadedConfig.name);
+      setHeroSubtitle(typeof props.subtitle === 'string' ? props.subtitle : (loadedConfig.tagline || ''));
+      setCtaText(typeof props.ctaText === 'string' ? props.ctaText : 'Explore Now');
+      setCtaLink(typeof props.ctaLink === 'string' ? props.ctaLink : '/shop');
+      setAccentColor(loadedConfig.theme.colorAccent || '#274bff');
     }
-    loadStore();
   }, [selectedStoreId]);
 
   if (!config) {
