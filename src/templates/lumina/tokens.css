@@ -1,0 +1,22 @@
+:root {
+  --bg-primary: #FAF8F5;
+  --bg-secondary: #F5F2EB;
+  --text-primary: #0C0C0D;
+  --text-secondary: #52525B;
+  --text-muted: #71717A;
+  --border-subtle: #E8E3DA;
+  --border-strong: #D4CDC3;
+  --accent-gold: #C5A880;
+
+  --font-serif: 'Bodoni Moda', 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-editorial: 'Bodoni Moda', 'Playfair Display', Georgia, serif;
+}
+
+.tracking-ultra-wide {
+  letter-spacing: 0.25em;
+}
+
+.tracking-cinematic {
+  letter-spacing: 0.18em;
+}

@@ -13,19 +13,21 @@
     "lint:security": "node scripts/check-security-rules.js"
   },
   "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "link:../gadjet store/node_modules/.pnpm/lucide-react@0.556.0_react@19.2.8/node_modules/lucide-react",
     "next": "^15.3.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "clsx": "^2.1.1",
     "tailwind-merge": "^3.6.0",
+    "tailwindcss": "link:../gadjet store/node_modules/tailwindcss",
     "zustand": "^5.0.15"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",
     "@types/react": "^19.1.0",
     "@types/react-dom": "^19.1.0",
+    "msw": "^2.8.0",
     "typescript": "^5.8.0",
-    "vitest": "^3.1.0",
-    "msw": "^2.8.0"
+    "vitest": "^3.1.0"
   }
 }
