@@ -6,10 +6,16 @@ import { ArrowRight } from 'lucide-react';
 
 interface BrandStorySectionProps {
   accentColor?: string;
+  storyHeadline?: string;
+  storyDescription?: string;
+  storyQuote?: string;
 }
 
 export const BrandStorySection: React.FC<BrandStorySectionProps> = ({
   accentColor = '#3b82f6',
+  storyHeadline,
+  storyDescription,
+  storyQuote,
 }) => {
   return (
     <section id="story" className="py-28 border-b border-[var(--border-subtle)] bg-[var(--bg-primary)] relative overflow-hidden">
@@ -27,15 +33,15 @@ export const BrandStorySection: React.FC<BrandStorySectionProps> = ({
             </span>
 
             <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[var(--text-primary)] leading-[1.1]">
-              Designed for the next generation.
+              {storyHeadline || 'Designed for the next generation.'}
             </h2>
 
             <p className="text-sm sm:text-base text-[var(--text-secondary)] leading-relaxed font-normal">
-              At AETHER, we believe consumer electronics should not be disposable commodities. We engineer our acoustic systems, computing architecture, and timepieces with the same reverence, tolerances, and timelessness as haute horlogerie and bespoke acoustic instruments.
+              {storyDescription || 'At AETHER, we believe consumer electronics should not be disposable commodities. We engineer our acoustic systems, computing architecture, and timepieces with the same reverence, tolerances, and timelessness as haute horlogerie and bespoke acoustic instruments.'}
             </p>
 
             <p className="text-xs sm:text-sm text-[var(--text-secondary)] leading-relaxed">
-              Every curve is milled from solid billet aerospace metals. Every transducer is individually laser-measured in our Copenhagen anechoic chambers. Every neural silicon board is thermally optimized using liquid-metal dispersion.
+              {storyQuote || 'Every curve is milled from solid billet aerospace metals. Every transducer is individually laser-measured in our Copenhagen anechoic chambers. Every neural silicon board is thermally optimized using liquid-metal dispersion.'}
             </p>
 
             {/* Brand Metrics */}

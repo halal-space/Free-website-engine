@@ -13,12 +13,14 @@ interface NavbarProps {
   storeName?: string;
   tagline?: string;
   accentColor?: string;
+  announcementText?: string;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
   storeName = 'AETHER',
   tagline = 'LABORATORIES',
   accentColor = '#3b82f6',
+  announcementText,
 }) => {
   const { openCart, getItemCount } = useCartStore();
   const { getWishlistCount, openWishlist } = useWishlistStore();
@@ -47,6 +49,16 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   return (
     <header className="sticky top-0 z-40 w-full transition-all duration-300 luxury-glass border-b border-[var(--border-subtle)] bg-[var(--bg-glass)]">
+      {announcementText && (
+        <aside
+          aria-label="Announcement"
+          className="bg-[var(--bg-secondary)] text-[var(--text-secondary)] text-[10px] sm:text-xs font-mono uppercase tracking-[0.15em] py-1.5 px-4 text-center border-b border-[var(--border-subtle)] flex items-center justify-center gap-3"
+        >
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor }}></span>
+          <span>{announcementText}</span>
+          <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor }}></span>
+        </aside>
+      )}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand Logo */}
         <div className="flex items-center gap-8">

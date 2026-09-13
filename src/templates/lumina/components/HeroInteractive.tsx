@@ -11,6 +11,7 @@ interface HeroInteractiveProps {
   heroSubtitle?: string;
   ctaText?: string;
   accentColor?: string;
+  heroImages?: string[];
   onCtaClick?: () => void;
 }
 
@@ -19,6 +20,7 @@ export const HeroInteractive: React.FC<HeroInteractiveProps> = ({
   heroSubtitle,
   ctaText = 'Inspect Garment',
   accentColor = '#C5A880',
+  heroImages,
   onCtaClick
 }) => {
   const { formatPrice } = useCartStore();
@@ -34,7 +36,7 @@ export const HeroInteractive: React.FC<HeroInteractiveProps> = ({
       price: 3450,
       material: '100% Loro Piana Mongolian Cashmere',
       edition: 'Numbered Archive 08 / 50',
-      image: 'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1800&auto=format&fit=crop',
+      image: (heroImages && heroImages[0]) || 'https://images.unsplash.com/photo-1544441893-675973e31985?q=80&w=1800&auto=format&fit=crop',
       alt: 'The Monolith Double-Breasted Coat displayed on an artisan tailor mannequin in dramatic studio lighting',
       productSlug: 'the-monolith-double-breasted-cashmere-coat',
       tag: 'Couture Mannequin Display'
@@ -48,7 +50,7 @@ export const HeroInteractive: React.FC<HeroInteractiveProps> = ({
       price: 3890,
       material: '100% Mulberry Silk Charmeuse (40 Momme)',
       edition: 'Numbered Edition 04 / 25',
-      image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=1800&auto=format&fit=crop',
+      image: (heroImages && heroImages[1]) || 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?q=80&w=1800&auto=format&fit=crop',
       alt: 'The Column Silk Satin Gown showcased on an elegant couturier tailor stand',
       productSlug: 'the-column-silk-satin-evening-gown',
       tag: 'Atelier Stand Presentation'
@@ -62,7 +64,7 @@ export const HeroInteractive: React.FC<HeroInteractiveProps> = ({
       price: 2150,
       material: '100% Super 150s Fresco Wool & Silk Lining',
       edition: 'Hand-Tailored in Milan',
-      image: 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1800&auto=format&fit=crop',
+      image: (heroImages && heroImages[2]) || 'https://images.unsplash.com/photo-1594938298603-c8148c4dae35?q=80&w=1800&auto=format&fit=crop',
       alt: 'The Sculpted Peak Blazer on tailor mannequin with sharp architectural lighting',
       productSlug: 'the-sculpted-peak-lapel-blazer',
       tag: 'Bespoke Tailor Form'

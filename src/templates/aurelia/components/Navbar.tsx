@@ -9,6 +9,8 @@ interface NavbarProps {
   storeName?: string;
   cartCount?: number;
   wishlistCount?: number;
+  announcementText?: string;
+  accentColor?: string;
   isInsidePreview?: boolean;
 }
 
@@ -16,6 +18,8 @@ export function Navbar({
   storeName = 'AURELIA',
   cartCount = 0,
   wishlistCount = 0,
+  announcementText,
+  accentColor,
   isInsidePreview = false,
 }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
@@ -48,6 +52,16 @@ export function Navbar({
             : 'border-b border-transparent bg-transparent',
         )}
       >
+        {announcementText && (
+          <aside
+            aria-label="Announcement"
+            className="bg-surface-2 text-ink-soft text-[10px] sm:text-xs font-mono uppercase tracking-[0.15em] py-1.5 px-4 text-center border-b border-line flex items-center justify-center gap-3"
+          >
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor || 'var(--accent)' }}></span>
+            <span>{announcementText}</span>
+            <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: accentColor || 'var(--accent)' }}></span>
+          </aside>
+        )}
         <div className="container-site flex h-16 items-center justify-between gap-4 sm:h-[72px]">
           {/* Mobile Menu & Logo */}
           <div className="flex items-center gap-6">

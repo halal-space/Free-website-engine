@@ -1,0 +1,26 @@
+/**
+ * Obsidian Solar (solarservice) Design Tokens
+ * Strictly scoped under .obsidian-theme and :root:has(.obsidian-theme)
+ * Prevents token leakage into Aurelia, Lumina, Apex, Petit, or Solenne
+ */
+
+.obsidian-theme,
+:root:has(.obsidian-theme) {
+  --color-onyx: #0B0B0C;
+  --color-charcoal: #1C1C1E;
+  --color-ivory: #F5F3EF;
+  --color-cloud: #FAFAF8;
+  --color-graphite: #3A3A3C;
+  --color-brass: #B8975A;
+  --color-brass-dark: #96793F;
+  --color-line: #E4DFD4;
+  --color-line-dark: #2A2A2D;
+
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Inter Variable", "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Studio Customizer dynamic overrides */
+  --obsidian-accent: #B8975A;
+  --obsidian-bg: #FAFAF8;
+  --obsidian-text: #0B0B0C;
+}

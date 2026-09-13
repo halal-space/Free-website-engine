@@ -1,0 +1,94 @@
+/* TERRA & CRU Scoped Design Tokens */
+.terra-theme,
+:root:has(.terra-theme) {
+  --color-canvas: #fbf9f5;
+  --color-surface: #f2efe9;
+  --color-card: #ffffff;
+  --color-ink: #1b241e;
+  --color-ink-soft: #4a554d;
+  --color-ink-mute: #6f7a72;
+  --color-line: rgba(27, 36, 30, 0.08);
+  --color-terracotta: #c85a32;
+  --color-terracotta-deep: #a84624;
+  --color-rosemary: #3b583e;
+  --color-rosemary-deep: #2c4430;
+  --color-gold: #c9a227;
+  --color-butter: #f3d27a;
+
+  --font-display: 'Fraunces', 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+
+  --radius-bento: 12px;
+  --radius-pill: 999px;
+
+  --shadow-card: 0 1px 2px rgba(27, 36, 30, 0.05), 0 8px 32px rgba(27, 36, 30, 0.08);
+  --shadow-lift: 0 2px 4px rgba(27, 36, 30, 0.06), 0 16px 48px rgba(27, 36, 30, 0.14);
+}
+
+.terra-theme {
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+.terra-theme .font-display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+}
+
+.terra-theme .tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Grain texture overlay */
+.terra-theme .grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+}
+
+/* Skeleton shimmer */
+@keyframes terra-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.terra-theme .img-shell {
+  background: linear-gradient(90deg, #f2efe9 25%, #e9e4d9 37%, #f2efe9 63%);
+  background-size: 800px 100%;
+  animation: terra-shimmer 1.4s ease infinite;
+}
+
+.terra-theme .img-shell.loaded {
+  animation: none;
+  background: transparent;
+}
+
+/* Marquee ticker animation */
+@keyframes terra-ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.terra-theme .animate-ticker {
+  animation: terra-ticker 60s linear infinite;
+}
+
+.terra-theme .animate-ticker:hover {
+  animation-play-state: paused;
+}
+
+/* No scrollbar utility */
+.terra-theme .no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.terra-theme .no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

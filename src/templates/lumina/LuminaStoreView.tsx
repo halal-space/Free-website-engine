@@ -41,6 +41,29 @@ export interface LuminaStoreViewProps {
   heroSubtitle?: string;
   ctaText?: string;
   accentColor?: string;
+  backgroundColor?: string;
+  surfaceColor?: string;
+  textColor?: string;
+  textMutedColor?: string;
+  borderColor?: string;
+  announcementText?: string;
+  heroImages?: string[];
+  storyHeadline?: string;
+  storyDescription?: string;
+  storyQuote?: string;
+  featuredProducts?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    category?: string;
+    badge?: string;
+  }>;
+  newsletterHeading?: string;
+  newsletterSubtitle?: string;
+  contactEmail?: string;
+  locationDetails?: string;
+  copyrightNotice?: string;
   isInsidePreview?: boolean;
 }
 
@@ -51,18 +74,61 @@ export const LuminaStoreView: React.FC<LuminaStoreViewProps> = ({
   heroSubtitle = 'Masterfully sculpted from 750gsm double-faced Mongolian cashmere and precision-tailored with architectural peak lapels. A study in silent luxury and structural permanence.',
   ctaText = 'Inspect Garment',
   accentColor = '#C5A880',
+  backgroundColor,
+  surfaceColor,
+  textColor,
+  textMutedColor,
+  borderColor,
+  announcementText,
+  heroImages,
+  storyHeadline,
+  storyDescription,
+  storyQuote,
+  featuredProducts,
+  newsletterHeading,
+  newsletterSubtitle,
+  contactEmail,
+  locationDetails,
+  copyrightNotice,
   isInsidePreview = false
 }) => {
   const { activePageView, setActivePageView } = useUIStore();
 
-  const newArrivals = PRODUCTS.filter((p) => p.isNew).slice(0, 6);
-  const limitedPieces = PRODUCTS.filter((p) => p.isLimited).slice(0, 4);
+  const effectiveProducts = React.useMemo(() => {
+    if (!featuredProducts || featuredProducts.length === 0) return PRODUCTS;
+    return PRODUCTS.map((p) => {
+      const match = featuredProducts.find((fp) => fp.id === p.id);
+      if (match) {
+        return {
+          ...p,
+          name: match.name || p.name,
+          price: match.price || p.price,
+          images: match.image
+            ? [{ ...p.images[0], url: match.image }, ...p.images.slice(1)]
+            : p.images,
+          categoryLabel: match.category || p.categoryLabel,
+          badge: match.badge || p.badge,
+        };
+      }
+      return p;
+    });
+  }, [featuredProducts]);
+
+  const newArrivals = effectiveProducts.filter((p) => p.isNew).slice(0, 6);
+  const limitedPieces = effectiveProducts.filter((p) => p.isLimited).slice(0, 4);
 
   return (
     <div
       className="lumina-theme min-h-screen bg-[#FAF8F5] text-[#0C0C0D] selection:bg-[#0C0C0D] selection:text-[#FAF8F5] flex flex-col antialiased"
       style={{
-        '--accent-gold': accentColor
+        backgroundColor: backgroundColor || '#FAF8F5',
+        color: textColor || '#0C0C0D',
+        '--accent-gold': accentColor,
+        '--bg-primary': backgroundColor || '#FAF8F5',
+        '--bg-surface': surfaceColor || '#FFFFFF',
+        '--text-primary': textColor || '#0C0C0D',
+        '--text-muted': textMutedColor || '#71717A',
+        '--border-subtle': borderColor || '#E8E3DA',
       } as React.CSSProperties}
     >
       {/* 1. Header with Announcement Bar and Navigation */}
@@ -70,6 +136,7 @@ export const LuminaStoreView: React.FC<LuminaStoreViewProps> = ({
         storeName={storeName}
         tagline={tagline}
         accentColor={accentColor}
+        announcementText={announcementText}
       />
 
       <main className="flex-1 w-full">
@@ -118,10 +185,16 @@ export const LuminaStoreView: React.FC<LuminaStoreViewProps> = ({
               heroSubtitle={heroSubtitle}
               ctaText={ctaText}
               accentColor={accentColor}
+              heroImages={heroImages}
             />
 
             {/* 3. Editorial Philosophy / Brand Statement */}
-            <Manifesto accentColor={accentColor} />
+            <Manifesto
+              accentColor={accentColor}
+              storyHeadline={storyHeadline}
+              storyDescription={storyDescription}
+              storyQuote={storyQuote}
+            />
 
             {/* 4. Curated Capsule Collections Grid */}
             <CapsuleGrid accentColor={accentColor} />
@@ -215,6 +288,11 @@ export const LuminaStoreView: React.FC<LuminaStoreViewProps> = ({
       <Footer
         storeName={storeName}
         accentColor={accentColor}
+        newsletterHeading={newsletterHeading}
+        newsletterSubtitle={newsletterSubtitle}
+        contactEmail={contactEmail}
+        locationDetails={locationDetails}
+        copyrightNotice={copyrightNotice}
       />
 
       {/* Global Interactive Portals */}

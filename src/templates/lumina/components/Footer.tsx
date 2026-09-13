@@ -7,11 +7,21 @@ import { useUIStore } from '../stores/uiStore';
 interface FooterProps {
   storeName?: string;
   accentColor?: string;
+  newsletterHeading?: string;
+  newsletterSubtitle?: string;
+  contactEmail?: string;
+  locationDetails?: string;
+  copyrightNotice?: string;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   storeName = 'ATELIER VÉLÈNE',
-  accentColor = '#C5A880'
+  accentColor = '#C5A880',
+  newsletterHeading,
+  newsletterSubtitle,
+  contactEmail,
+  locationDetails,
+  copyrightNotice
 }) => {
   const { setActivePageView, setSelectedCollectionSlug, setShopInitialCategory, setWishlistOpen } = useUIStore();
   const [email, setEmail] = useState('');
@@ -37,10 +47,10 @@ export const Footer: React.FC<FooterProps> = ({
               Private Client Services
             </span>
             <h3 className="text-2xl sm:text-3xl font-serif font-light text-[#FAF8F5] leading-snug">
-              Receive Private Access to Numbered Archive Releases & Salon Previews.
+              {newsletterHeading || 'Receive Private Access to Numbered Archive Releases & Salon Previews.'}
             </h3>
             <p className="text-xs text-[#A1A1AA] leading-relaxed max-w-lg">
-              Subscribers receive invitations to seasonal atelier trunk shows in Paris and Milan, priority access to limited numbered pieces, and bespoke client concierge consultations.
+              {newsletterSubtitle || 'Subscribers receive invitations to seasonal atelier trunk shows in Paris and Milan, priority access to limited numbered pieces, and bespoke client concierge consultations.'}
             </p>
           </div>
 
@@ -152,22 +162,31 @@ export const Footer: React.FC<FooterProps> = ({
               Flagship Salons
             </h4>
             <div className="space-y-2.5 text-[11px] text-[#A1A1AA]">
-              <div>
-                <strong className="text-[#FAF8F5] block">PARIS</strong>
-                <span>18 Rue du Faubourg Saint-Honoré</span>
-              </div>
-              <div>
-                <strong className="text-[#FAF8F5] block">MILAN</strong>
-                <span>Via Montenapoleone 14</span>
-              </div>
-              <div>
-                <strong className="text-[#FAF8F5] block">NEW YORK</strong>
-                <span>840 Madison Avenue</span>
-              </div>
-              <div>
-                <strong className="text-[#FAF8F5] block">TOKYO</strong>
-                <span>6-10-1 Ginza, Chuo-ku</span>
-              </div>
+              {locationDetails ? (
+                <div>
+                  <strong className="text-[#FAF8F5] block">HEADQUARTERS</strong>
+                  <span>{locationDetails}</span>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <strong className="text-[#FAF8F5] block">PARIS</strong>
+                    <span>18 Rue du Faubourg Saint-Honoré</span>
+                  </div>
+                  <div>
+                    <strong className="text-[#FAF8F5] block">MILAN</strong>
+                    <span>Via Montenapoleone 14</span>
+                  </div>
+                  <div>
+                    <strong className="text-[#FAF8F5] block">NEW YORK</strong>
+                    <span>840 Madison Avenue</span>
+                  </div>
+                  <div>
+                    <strong className="text-[#FAF8F5] block">TOKYO</strong>
+                    <span>6-10-1 Ginza, Chuo-ku</span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -175,7 +194,7 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Bottom Bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-[11px] text-[#71717A] gap-4">
           <div className="flex items-center gap-6">
-            <span>© 2026 {storeName.toUpperCase()}. All Rights Reserved.</span>
+            <span>{copyrightNotice || `© 2026 ${storeName.toUpperCase()}. All Rights Reserved.`}</span>
             <span className="hidden sm:inline">•</span>
             <span className="hidden sm:inline">Certified Sustainable Haute Couture</span>
           </div>

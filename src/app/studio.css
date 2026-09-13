@@ -1,0 +1,201 @@
+/* Storefront Engine Studio Dedicated Stylesheet */
+
+:root {
+  --studio-bg: #090a0f;
+  --studio-surface-1: #0f121a;
+  --studio-surface-2: #141824;
+  --studio-surface-3: #1a2030;
+  --studio-surface-4: #21283d;
+  --studio-border-subtle: rgba(255, 255, 255, 0.08);
+  --studio-border-strong: rgba(255, 255, 255, 0.16);
+  --studio-border-hover: rgba(255, 255, 255, 0.25);
+  --studio-text-primary: #f8fafc;
+  --studio-text-secondary: #94a3b8;
+  --studio-text-muted: #64748b;
+  --studio-accent-indigo: #6366f1;
+  --studio-accent-blue: #3b82f6;
+  --studio-accent-cyan: #06b6d4;
+  --studio-accent-emerald: #10b981;
+}
+
+/* Studio Canvas Background (Technical Dot Grid) */
+.studio-canvas-bg {
+  background-color: var(--studio-bg);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+/* Studio Glass Panels */
+.studio-header-glass {
+  background: rgba(15, 18, 26, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--studio-border-subtle);
+}
+
+.studio-sidebar-panel {
+  background: var(--studio-surface-1);
+  border-right: 1px solid var(--studio-border-subtle);
+}
+
+.studio-dock-glass {
+  background: rgba(14, 17, 24, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-top: 1px solid var(--studio-border-subtle);
+}
+
+/* Studio Custom Scrollbar */
+.studio-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.studio-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.studio-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 9999px;
+}
+.studio-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+/* Studio Input Fields */
+.studio-input {
+  background-color: var(--studio-surface-2);
+  border: 1px solid var(--studio-border-subtle);
+  color: var(--studio-text-primary);
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  transition: all 0.15s ease;
+}
+.studio-input:hover {
+  border-color: var(--studio-border-hover);
+}
+.studio-input:focus {
+  outline: none;
+  border-color: var(--studio-accent-indigo);
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+  background-color: var(--studio-surface-3);
+}
+
+/* Studio Accordion Container */
+.studio-accordion-card {
+  background-color: var(--studio-surface-1);
+  border: 1px solid var(--studio-border-subtle);
+  border-radius: 0.625rem;
+  overflow: hidden;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.studio-accordion-card:hover {
+  border-color: var(--studio-border-strong);
+}
+
+/* Device Mockup Frames */
+.studio-device-desktop {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.75rem;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--studio-border-subtle);
+}
+
+.studio-device-tablet {
+  position: relative;
+  width: 768px;
+  max-width: 100%;
+  height: 100%;
+  border-radius: 2rem;
+  padding: 12px;
+  background: #1e2230;
+  box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.studio-device-mobile {
+  position: relative;
+  width: 390px;
+  max-width: 100%;
+  height: 100%;
+  border-radius: 2.75rem;
+  padding: 12px;
+  background: #181b24;
+  box-shadow: 0 35px 80px -20px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.studio-screen-inner {
+  border-radius: 1.5rem;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+}
+
+.studio-screen-inner-mobile {
+  border-radius: 2.25rem;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  background: #000000;
+  position: relative;
+  padding-top: 26px;
+}
+
+/* Dynamic Island */
+.studio-dynamic-island {
+  position: absolute;
+  top: 19px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 96px;
+  height: 22px;
+  background-color: #000000;
+  border-radius: 9999px;
+  z-index: 50;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.studio-camera-lens {
+  width: 9px;
+  height: 9px;
+  background: #0c1524;
+  border-radius: 50%;
+  box-shadow: inset 0 0 2px rgba(255, 255, 255, 0.35);
+}
+
+.studio-sensor {
+  width: 7px;
+  height: 7px;
+  background: #0a0e14;
+  border-radius: 50%;
+}
+
+/* Template Switcher Button Glow */
+.studio-dock-btn {
+  position: relative;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.studio-dock-btn:hover {
+  transform: translateY(-1px);
+}
+.studio-dock-btn-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 12%;
+  right: 12%;
+  height: 2px;
+  border-radius: 9999px;
+  background: currentColor;
+  box-shadow: 0 0 10px currentColor;
+}
+
+/* Hide Next.js dev overlay indicator so it doesn't obstruct dock items */
+nextjs-portal {
+  display: none !important;
+}
+

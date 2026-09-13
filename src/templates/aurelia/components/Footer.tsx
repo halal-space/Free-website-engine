@@ -6,7 +6,21 @@ import { aureliaCategories, aureliaSiteMeta } from '../data';
 import { buttonClasses } from './ui/Button';
 import { cn } from '../lib/utils';
 
-export function Footer({ storeName = 'AURELIA' }: { storeName?: string }) {
+interface FooterProps {
+  storeName?: string;
+  newsletterHeading?: string;
+  newsletterSubtitle?: string;
+  contactEmail?: string;
+  copyrightNotice?: string;
+}
+
+export function Footer({
+  storeName = 'AURELIA',
+  newsletterHeading,
+  newsletterSubtitle,
+  contactEmail,
+  copyrightNotice,
+}: FooterProps) {
   const [email, setEmail] = useState('');
   const [done, setDone] = useState(false);
   const [error, setError] = useState('');
@@ -28,11 +42,11 @@ export function Footer({ storeName = 'AURELIA' }: { storeName?: string }) {
           <div>
             <p className="font-display text-2xl font-bold tracking-[0.06em] text-ink uppercase">{storeName}</p>
             <h2 className="mt-6 font-display text-3xl font-semibold text-ink sm:text-4xl">
-              Stay ahead of what's next.
+              {newsletterHeading || "Stay ahead of what's next."}
             </h2>
             <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-muted">
-              Get early access to new products, exclusive releases, and special offers — delivered
-              before anyone else sees them.
+              {newsletterSubtitle ||
+                'Get early access to new products, exclusive releases, and special offers — delivered before anyone else sees them.'}
             </p>
             <div className="mt-6">
               {done ? (
@@ -162,7 +176,7 @@ export function Footer({ storeName = 'AURELIA' }: { storeName?: string }) {
 
           <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-line pt-6">
             <p className="text-xs text-ink-muted">
-              © {new Date().getFullYear()} {storeName} Technology. All rights reserved.
+              {copyrightNotice || `© ${new Date().getFullYear()} ${storeName} Technology. All rights reserved.`}
             </p>
             <div className="flex gap-6">
               {aureliaSiteMeta.footerLinks.legal.map((l) => (

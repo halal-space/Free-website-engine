@@ -7,11 +7,19 @@ import { useUIStore } from '../stores/uiStore';
 interface FooterProps {
   storeName?: string;
   accentColor?: string;
+  newsletterHeading?: string;
+  newsletterSubtitle?: string;
+  contactEmail?: string;
+  copyrightNotice?: string;
 }
 
 export const Footer: React.FC<FooterProps> = ({
   storeName = 'AETHER',
   accentColor = '#3b82f6',
+  newsletterHeading,
+  newsletterSubtitle,
+  contactEmail,
+  copyrightNotice,
 }) => {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
@@ -89,10 +97,10 @@ export const Footer: React.FC<FooterProps> = ({
                 CLIENT DISPATCH
               </span>
               <h4 className="text-base sm:text-lg font-bold text-[var(--text-primary)] mb-2">
-                Stay ahead of what's next.
+                {newsletterHeading || "Stay ahead of what's next."}
               </h4>
               <p className="text-xs text-[var(--text-secondary)] mb-4 leading-relaxed">
-                Receive private allocations, advance engineering journals, and bespoke invitations to limited acoustic releases.
+                {newsletterSubtitle || 'Receive private allocations, advance engineering journals, and bespoke invitations to limited acoustic releases.'}
               </p>
 
               {submitted ? (
@@ -147,7 +155,7 @@ export const Footer: React.FC<FooterProps> = ({
         {/* Bottom Bar with Trust & Currency */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-[var(--text-muted)]">
           <div className="flex flex-wrap items-center gap-4">
-            <span>© {new Date().getFullYear()} {storeName} Laboratories Inc. All rights reserved.</span>
+            <span>{copyrightNotice || `© ${new Date().getFullYear()} ${storeName} Laboratories Inc. All rights reserved.`}</span>
             <span className="hidden sm:inline">•</span>
             <span className="inline-flex items-center gap-1.5 text-[var(--text-secondary)]">
               <span className="w-2 h-2 rounded-full bg-emerald-500"></span>

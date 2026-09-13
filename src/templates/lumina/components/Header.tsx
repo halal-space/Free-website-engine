@@ -12,6 +12,7 @@ interface HeaderProps {
   storeName?: string;
   tagline?: string;
   accentColor?: string;
+  announcementText?: string;
   onNavigateSection?: (sectionId: string) => void;
 }
 
@@ -19,6 +20,7 @@ export const Header: React.FC<HeaderProps> = ({
   storeName = 'ATELIER VÉLÈNE',
   tagline = 'Paris · Milan · New York',
   accentColor = '#C5A880',
+  announcementText,
   onNavigateSection
 }) => {
   const { currency, setCurrency, getTotalItemsCount, setCartOpen } = useCartStore();
@@ -83,9 +85,7 @@ export const Header: React.FC<HeaderProps> = ({
         className="bg-[#0C0C0D] text-[#FAF8F5] text-[10px] sm:text-[11px] tracking-ultra-wide uppercase py-2 px-4 text-center border-b border-[#1E1E20] flex items-center justify-center gap-4 transition-colors"
       >
         <span className="hidden sm:inline" style={{ color: accentColor }}>❖</span>
-        <span>Complimentary Worldwide Courier on Orders Over $500</span>
-        <span className="hidden md:inline text-[#52525B]">•</span>
-        <span className="hidden md:inline">2026 Archive Lookbook Now Open</span>
+        <span>{announcementText || 'Complimentary Worldwide Courier on Orders Over $500 • 2026 Archive Lookbook Now Open'}</span>
         <span className="hidden sm:inline" style={{ color: accentColor }}>❖</span>
       </aside>
 

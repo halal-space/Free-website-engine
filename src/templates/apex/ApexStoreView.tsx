@@ -39,6 +39,29 @@ export interface ApexStoreViewProps {
   heroSubtitle?: string;
   ctaText?: string;
   accentColor?: string;
+  backgroundColor?: string;
+  surfaceColor?: string;
+  textColor?: string;
+  textMutedColor?: string;
+  borderColor?: string;
+  announcementText?: string;
+  heroImages?: string[];
+  storyHeadline?: string;
+  storyDescription?: string;
+  storyQuote?: string;
+  featuredProducts?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    category?: string;
+    badge?: string;
+  }>;
+  newsletterHeading?: string;
+  newsletterSubtitle?: string;
+  contactEmail?: string;
+  locationDetails?: string;
+  copyrightNotice?: string;
   isInsidePreview?: boolean;
 }
 
@@ -49,9 +72,42 @@ export const ApexStoreView: React.FC<ApexStoreViewProps> = ({
   heroSubtitle = 'Precision-engineered gadgets designed for people who expect more from technology. Bespoke acoustics, monolithic titanium, and neural silicon.',
   ctaText = 'Explore Collection',
   accentColor = '#3b82f6',
+  backgroundColor,
+  surfaceColor,
+  textColor,
+  textMutedColor,
+  borderColor,
+  announcementText,
+  heroImages,
+  storyHeadline,
+  storyDescription,
+  storyQuote,
+  featuredProducts,
+  newsletterHeading,
+  newsletterSubtitle,
+  contactEmail,
+  locationDetails,
+  copyrightNotice,
   isInsidePreview = false,
 }) => {
-  const newArrivals = getNewArrivals();
+  const baseArrivals = getNewArrivals();
+  const newArrivals = React.useMemo(() => {
+    if (!featuredProducts || featuredProducts.length === 0) return baseArrivals;
+    return baseArrivals.map((p) => {
+      const match = featuredProducts.find((fp) => fp.id === p.id);
+      if (match) {
+        return {
+          ...p,
+          name: match.name || p.name,
+          price: match.price || p.price,
+          images: match.image ? [match.image, ...(p.images.slice(1))] : p.images,
+          category: (match.category as any) || p.category,
+        };
+      }
+      return p;
+    });
+  }, [featuredProducts, baseArrivals]);
+
   const theme = useThemeStore((s) => s.theme);
   const {
     activePageView,
@@ -68,11 +124,16 @@ export const ApexStoreView: React.FC<ApexStoreViewProps> = ({
     <div
       className={`apex-theme ${theme === 'light' ? 'light' : 'dark'} min-h-screen flex flex-col antialiased selection:bg-blue-600 selection:text-white`}
       style={{
-        backgroundColor: 'var(--bg-primary)',
-        color: 'var(--text-primary)',
+        backgroundColor: backgroundColor || 'var(--bg-primary)',
+        color: textColor || 'var(--text-primary)',
         '--accent-primary': accentColor,
         '--accent-glow': `${accentColor}33`,
         '--border-focus': accentColor,
+        ...(backgroundColor ? { '--bg-primary': backgroundColor } : {}),
+        ...(surfaceColor ? { '--bg-card': surfaceColor, '--bg-secondary': surfaceColor } : {}),
+        ...(textColor ? { '--text-primary': textColor } : {}),
+        ...(textMutedColor ? { '--text-secondary': textMutedColor, '--text-muted': textMutedColor } : {}),
+        ...(borderColor ? { '--border-subtle': borderColor } : {}),
       } as React.CSSProperties}
     >
       {/* 1. Glass Navigation Bar */}
@@ -80,6 +141,7 @@ export const ApexStoreView: React.FC<ApexStoreViewProps> = ({
         storeName={storeName}
         tagline={tagline}
         accentColor={accentColor}
+        announcementText={announcementText}
       />
 
       {/* Sub-Page Return Bar (Shown when exploring sub-pages) */}
@@ -208,6 +270,7 @@ export const ApexStoreView: React.FC<ApexStoreViewProps> = ({
               heroSubtitle={heroSubtitle}
               ctaText={ctaText}
               accentColor={accentColor}
+              heroImages={heroImages}
             />
 
             {/* 3. Featured Architectural Categories */}
@@ -226,7 +289,12 @@ export const ApexStoreView: React.FC<ApexStoreViewProps> = ({
             <BestSellersSection accentColor={accentColor} />
 
             {/* 7. Heritage & Brand Story */}
-            <BrandStorySection accentColor={accentColor} />
+            <BrandStorySection
+              accentColor={accentColor}
+              storyHeadline={storyHeadline}
+              storyDescription={storyDescription}
+              storyQuote={storyQuote}
+            />
 
             {/* 8. Innovation Pillars */}
             <InnovationFeatures accentColor={accentColor} />
@@ -241,6 +309,10 @@ export const ApexStoreView: React.FC<ApexStoreViewProps> = ({
       <Footer
         storeName={storeName}
         accentColor={accentColor}
+        newsletterHeading={newsletterHeading}
+        newsletterSubtitle={newsletterSubtitle}
+        contactEmail={contactEmail}
+        copyrightNotice={copyrightNotice}
       />
 
       {/* Interactive Global Portals */}

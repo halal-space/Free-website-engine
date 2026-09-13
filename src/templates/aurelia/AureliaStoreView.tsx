@@ -28,6 +28,29 @@ export interface AureliaStoreViewProps {
   heroSubtitle?: string;
   ctaText?: string;
   accentColor?: string;
+  backgroundColor?: string;
+  surfaceColor?: string;
+  textColor?: string;
+  textMutedColor?: string;
+  borderColor?: string;
+  announcementText?: string;
+  heroImages?: string[];
+  storyHeadline?: string;
+  storyDescription?: string;
+  storyQuote?: string;
+  featuredProducts?: Array<{
+    id: string;
+    name: string;
+    price: number;
+    image: string;
+    category?: string;
+    badge?: string;
+  }>;
+  newsletterHeading?: string;
+  newsletterSubtitle?: string;
+  contactEmail?: string;
+  locationDetails?: string;
+  copyrightNotice?: string;
   isInsidePreview?: boolean;
   className?: string;
 }
@@ -39,6 +62,22 @@ export function AureliaStoreView({
   heroSubtitle = 'Precision-engineered gadgets designed for people who expect more from technology.',
   ctaText = 'Explore Collection',
   accentColor = '#5478ff',
+  backgroundColor,
+  surfaceColor,
+  textColor,
+  textMutedColor,
+  borderColor,
+  announcementText,
+  heroImages,
+  storyHeadline,
+  storyDescription,
+  storyQuote,
+  featuredProducts,
+  newsletterHeading,
+  newsletterSubtitle,
+  contactEmail,
+  locationDetails,
+  copyrightNotice,
   isInsidePreview = false,
   className,
 }: AureliaStoreViewProps) {
@@ -54,6 +93,13 @@ export function AureliaStoreView({
       style={
         {
           '--accent': accentColor,
+          backgroundColor: backgroundColor || '#0a0b10',
+          color: textColor || '#f1f5f9',
+          '--bg-obsidian': backgroundColor || '#0a0b10',
+          '--bg-surface': surfaceColor || '#12141c',
+          '--text-ink': textColor || '#f1f5f9',
+          '--text-muted': textMutedColor || '#8b92a5',
+          '--border-subtle': borderColor || 'rgba(255, 255, 255, 0.08)',
         } as React.CSSProperties
       }
       className={cn(
@@ -66,6 +112,8 @@ export function AureliaStoreView({
         storeName={storeName}
         cartCount={cartCount}
         wishlistCount={wishlistCount}
+        announcementText={announcementText}
+        accentColor={accentColor}
         isInsidePreview={isInsidePreview}
       />
 
@@ -76,6 +124,7 @@ export function AureliaStoreView({
           heroTitle={heroTitle}
           heroSubtitle={heroSubtitle}
           ctaText={ctaText}
+          heroImages={heroImages}
         />
 
         {/* 2. Featured Categories Bento Grid */}
@@ -165,14 +214,23 @@ export function AureliaStoreView({
         <Innovation />
 
         {/* 8. Brand Story Section */}
-        <BrandStory />
+        <BrandStory
+          storyHeadline={storyHeadline}
+          storyDescription={storyDescription}
+        />
 
         {/* 9. Promo Banner */}
         <PromoBanner />
       </main>
 
       {/* Footer */}
-      <Footer storeName={storeName} />
+      <Footer
+        storeName={storeName}
+        newsletterHeading={newsletterHeading}
+        newsletterSubtitle={newsletterSubtitle}
+        contactEmail={contactEmail}
+        copyrightNotice={copyrightNotice}
+      />
     </div>
   );
 }

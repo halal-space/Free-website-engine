@@ -2,7 +2,12 @@ import React from 'react';
 import { u } from '../data';
 import { buttonClasses } from './ui/Button';
 
-export function BrandStory() {
+interface BrandStoryProps {
+  storyHeadline?: string;
+  storyDescription?: string;
+}
+
+export function BrandStory({ storyHeadline, storyDescription }: BrandStoryProps = {}) {
   const storyImg = u('photo-1523275335684-37898b6baf30', { w: 1400, h: 1100, q: 85 });
   const secondary = u('photo-1517336714731-489689fd1ca8', { w: 900, h: 1100, q: 85 });
 
@@ -38,13 +43,12 @@ export function BrandStory() {
             Our Story
           </p>
           <h2 className="font-display text-3xl font-semibold text-ink sm:text-4xl lg:text-[2.75rem] lg:leading-[1.05]">
-            Designed for the next generation.
+            {storyHeadline || 'Designed for the next generation.'}
           </h2>
           <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-ink-muted">
             <p>
-              AURELIA was founded on a simple dissatisfaction: that flagship technology kept
-              choosing performance over taste. We set out to build a studio where engineering,
-              design, and craftsmanship answer to the same standard.
+              {storyDescription ||
+                'AURELIA was founded on a simple dissatisfaction: that flagship technology kept choosing performance over taste. We set out to build a studio where engineering, design, and craftsmanship answer to the same standard.'}
             </p>
             <p>
               Every product begins with materials and ends with obsession. A forged titanium

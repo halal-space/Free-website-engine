@@ -10,6 +10,7 @@ interface HeroSectionProps {
   heroSubtitle?: string;
   ctaText?: string;
   accentColor?: string;
+  heroImages?: string[];
 }
 
 export const HeroSection: React.FC<HeroSectionProps> = ({
@@ -17,6 +18,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   heroSubtitle = 'Precision-engineered gadgets designed for people who expect more from technology. Bespoke acoustics, monolithic titanium, and neural silicon.',
   ctaText = 'Explore Collection',
   accentColor = '#3b82f6',
+  heroImages,
 }) => {
   const flagship = products[0]; // Aura Pro
 
@@ -110,7 +112,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <div className="relative z-10 w-4/5 h-4/5 animate-float">
                 <div className="relative w-full h-full rounded-3xl overflow-hidden shadow-2xl shadow-black/80 border border-white/15 bg-black/60">
                   <img
-                    src={flagship.images[0]}
+                    src={(heroImages && heroImages[0]) || flagship.images[0]}
                     alt={flagship.name}
                     className="w-full h-full object-cover object-center filter contrast-105"
                   />

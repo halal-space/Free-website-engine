@@ -1,0 +1,144 @@
+/* ============================================================
+   SOLENNE — Design Tokens
+   Warm ivory · deep charcoal · champagne gold
+   ============================================================ */
+
+.solenne-theme,
+:root:has(.solenne-theme) {
+  /* ---- Color · Light (default) ---- */
+  --color-ivory: #faf7f2;
+  --color-cream: #f4eee4;
+  --color-linen: #ede5d8;
+  --color-sand: #e2d7c5;
+  --color-champagne: #c9b489;
+  --color-gold: #8a6d47;
+  --color-bronze: #755a38;
+  --color-clay: #6b5d4d;
+  --color-stone: #6e675d;
+  --color-ink: #1b1917;
+  --color-espresso: #2a2724;
+  --color-smoke: #55504a;
+
+  /* ---- Semantic ---- */
+  --color-bg: var(--color-ivory);
+  --color-surface: #ffffff;
+  --color-line: rgba(27, 25, 23, 0.09);
+  --color-line-strong: rgba(27, 25, 23, 0.16);
+
+  /* ---- Typography ---- */
+  --font-serif: "Cormorant Garamond", "Times New Roman", Georgia, serif;
+  --font-sans: "Inter", "Inter Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --text-eyebrow: 0.6875rem;
+  --text-eyebrow--line-height: 1.1;
+  --text-eyebrow--letter-spacing: 0.22em;
+  --text-eyebrow--font-weight: 500;
+
+  /* ---- Radii ---- */
+  --radius-xs: 0.1875rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+
+  /* ---- Shadows (barely-there) ---- */
+  --shadow-whisper: 0 1px 2px rgba(27, 25, 23, 0.03), 0 8px 32px -12px rgba(27, 25, 23, 0.07);
+  --shadow-soft: 0 2px 6px rgba(27, 25, 23, 0.04), 0 24px 64px -24px rgba(27, 25, 23, 0.12);
+  --shadow-lifted: 0 4px 12px rgba(27, 25, 23, 0.05), 0 40px 96px -32px rgba(27, 25, 23, 0.18);
+
+  /* ---- Motion ---- */
+  --ease-lux: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-silk: cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-swift: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --header-h: 4.5rem;
+  --spacing-gutter: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+/* Scoped base heading styles */
+.solenne-theme h1,
+.solenne-theme h2,
+.solenne-theme h3,
+.solenne-theme h4 {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+}
+
+.solenne-theme .eyebrow {
+  font-size: var(--text-eyebrow);
+  line-height: var(--text-eyebrow--line-height);
+  letter-spacing: var(--text-eyebrow--letter-spacing);
+  font-weight: var(--text-eyebrow--font-weight);
+  text-transform: uppercase;
+}
+
+.solenne-theme .container-luxe {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 88rem;
+  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.solenne-theme .container-editorial {
+  width: 100%;
+  margin-inline: auto;
+  max-width: 78rem;
+  padding-inline: clamp(1.25rem, 4vw, 3.5rem);
+}
+
+.solenne-theme .hairline-t { border-top: 1px solid var(--color-line); }
+.solenne-theme .hairline-b { border-bottom: 1px solid var(--color-line); }
+
+.solenne-theme .link-underline {
+  position: relative;
+}
+.solenne-theme .link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -3px;
+  height: 1px;
+  width: 100%;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.5s var(--ease-lux);
+}
+.solenne-theme .link-underline:hover::after,
+.solenne-theme .link-underline[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.solenne-theme .no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+/* Animations */
+@keyframes marquee-solenne {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.solenne-theme .animate-marquee {
+  animation: marquee-solenne 36s linear infinite;
+}
+
+@keyframes skeleton-slide-solenne {
+  from { background-position: 120% 0; }
+  to { background-position: -80% 0; }
+}
+
+.solenne-theme .img-skeleton {
+  background-color: var(--color-cream);
+  background-image: linear-gradient(100deg, transparent 40%, rgba(255, 255, 255, 0.55) 50%, transparent 60%);
+  background-size: 200% 100%;
+  animation: skeleton-slide-solenne 1.8s ease-in-out infinite;
+}
+.solenne-theme .img-skeleton.is-loaded {
+  animation: none;
+  background-image: none;
+}

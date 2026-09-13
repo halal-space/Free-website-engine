@@ -11,6 +11,7 @@ interface HeroProps {
   heroTitle?: string;
   heroSubtitle?: string;
   ctaText?: string;
+  heroImages?: string[];
 }
 
 export function Hero({
@@ -18,8 +19,9 @@ export function Hero({
   heroTitle = 'Technology,\nRefined.',
   heroSubtitle = 'Precision-engineered gadgets designed for people who expect more from technology.',
   ctaText = 'Explore Collection',
+  heroImages,
 }: HeroProps) {
-  const bg = u('photo-1511707171634-5f897ff02aa9', { w: 1600, h: 900, q: 60 });
+  const bg = (heroImages && heroImages[0]) || u('photo-1511707171634-5f897ff02aa9', { w: 1600, h: 900, q: 60 });
 
   return (
     <section className="relative flex min-h-[92vh] items-center overflow-hidden bg-obsidian">
