@@ -115,7 +115,7 @@ function Hero({ section, themeId, basePath, merchantName }: { section: SectionCo
     <span className="sf-hero-side">{merchantName}</span>
   </section>;
   return <section className="sf-hero sf-hero-playful">
-    <div className="sf-hero-copy"><span className="sf-eyebrow">Welcome to {merchantName}</span><h1>{lines.map((line, index) => <span key={index}>{line}<br /></span>)}</h1><p>{section.text}</p><Link className="sf-button" href={path(basePath, '/shop')}>Come explore <ArrowUpRight size={18} /></Link><span className="sf-playful-scribble" aria-hidden="true">✳</span></div>
+    <div className="sf-hero-copy"><span className="sf-eyebrow">Welcome to {merchantName}</span><h1>{lines.map((line, index) => <span key={index}>{line}<br /></span>)}</h1><p>{section.text}</p><Link className="sf-button" href={path(basePath, '/shop')}>Explore the collection <ArrowUpRight size={18} /></Link><span className="sf-hero-signoff" aria-hidden="true">01 / Discover</span></div>
     <div className="sf-hero-image"><StoreImage src={image} alt="" fill priority sizes="(max-width: 760px) 100vw, 50vw" /></div>
   </section>;
 }

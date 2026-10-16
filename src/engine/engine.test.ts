@@ -5,6 +5,7 @@ import { MOCK_STORES } from './mock-data';
 import { getMockPublishedSnapshot, getMockVersionHistory, publishMockConfig } from './mock-publishing';
 import { contrastRatio, readableInk } from './validation';
 import { formatMinorAmount } from './money';
+import { THEMES } from './theme-registry';
 
 describe('storefront assembly', () => {
   it('formats minor amounts using each currency’s decimal units', () => {
@@ -49,6 +50,15 @@ describe('storefront assembly', () => {
 });
 
 describe('tenant and backend boundaries', () => {
+  it('keeps every theme preset publishable with readable body text', () => {
+    for (const theme of THEMES) {
+      const snapshot = structuredClone(MOCK_STORES['sprout-and-co']);
+      snapshot.config.themeId = theme.id;
+      snapshot.config.tokens = theme.defaults;
+      expect(() => assertSnapshot(snapshot, snapshot.merchant.id)).not.toThrow();
+    }
+  });
+
   it('selects readable text for light and dark merchant colors', () => {
     for (const background of ['#FFFFFF', '#101820', '#747474', '#777777', '#F8C994']) {
       expect(contrastRatio(readableInk(background), background)).toBeGreaterThanOrEqual(4.5);

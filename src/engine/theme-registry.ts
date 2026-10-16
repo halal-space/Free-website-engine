@@ -11,19 +11,19 @@ export interface ThemeManifest {
 
 export const THEMES: readonly ThemeManifest[] = [
   {
-    id: 'playful', name: 'Playful', description: 'Warm, expressive, and full of wonder.', detail: 'Soft shapes · bright moments',
+    id: 'playful', name: 'Mothercare', description: 'A gentle, considered world for little ones.', detail: 'WARMTH · SOFT FORMS',
     preview: 'https://images.unsplash.com/photo-1515488042361-ee00e0ddd4e4?w=700&q=80',
-    defaults: { primary: '#D86152', secondary: '#F6EACB', accent: '#F2B758', hover: '#A94138', background: '#FAF6EC', surface: '#FFFFFF', text: '#303126', muted: '#686B5F', border: '#DCD9C9', displayFont: 'rounded', bodyFont: 'sans', headingScale: 'standard', headingWeight: 'bold', bodyLineHeight: 'relaxed', letterSpacing: 'normal', density: 'comfortable', containerWidth: 'standard', gridGap: 'standard', radius: 'soft', buttonShape: 'rounded', borderWidth: 'thin', shadow: 'soft', motion: 'subtle' },
+    defaults: { primary: '#875347', secondary: '#EDE2D5', accent: '#B88661', hover: '#6E4038', background: '#F9F6F0', surface: '#FFFEFB', text: '#282B26', muted: '#64685F', border: '#D8D2C7', displayFont: 'serif', bodyFont: 'sans', headingScale: 'standard', headingWeight: 'regular', bodyLineHeight: 'relaxed', letterSpacing: 'normal', density: 'comfortable', containerWidth: 'standard', gridGap: 'standard', radius: 'soft', buttonShape: 'rounded', borderWidth: 'thin', shadow: 'soft', motion: 'subtle' },
   },
   {
-    id: 'precision', name: 'Precision', description: 'Sharp product focus with a modern edge.', detail: 'Bold type · clean geometry',
+    id: 'precision', name: 'Tech & gadgets', description: 'Precise, confident presentation for modern devices.', detail: 'CLARITY · PERFORMANCE',
     preview: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=700&q=80',
-    defaults: { primary: '#2949EC', secondary: '#111822', accent: '#C7FF6B', hover: '#1939C7', background: '#F5F6F8', surface: '#FFFFFF', text: '#15181E', muted: '#656D7B', border: '#D9DDE5', displayFont: 'sans', bodyFont: 'sans', headingScale: 'large', headingWeight: 'heavy', bodyLineHeight: 'standard', letterSpacing: 'tight', density: 'compact', containerWidth: 'wide', gridGap: 'compact', radius: 'sharp', buttonShape: 'square', borderWidth: 'thin', shadow: 'none', motion: 'subtle' },
+    defaults: { primary: '#254BC7', secondary: '#101820', accent: '#D3ED98', hover: '#193A9C', background: '#F3F5F3', surface: '#FFFFFF', text: '#18211D', muted: '#5C6761', border: '#CED5D0', displayFont: 'sans', bodyFont: 'sans', headingScale: 'large', headingWeight: 'heavy', bodyLineHeight: 'standard', letterSpacing: 'tight', density: 'compact', containerWidth: 'wide', gridGap: 'compact', radius: 'sharp', buttonShape: 'square', borderWidth: 'thin', shadow: 'none', motion: 'subtle' },
   },
   {
-    id: 'editorial', name: 'Editorial', description: 'Image-led storytelling with quiet confidence.', detail: 'Immersive imagery · refined space',
+    id: 'editorial', name: 'Clothing', description: 'Fashion-led storytelling with room to breathe.', detail: 'EDITORIAL · REFINED SPACE',
     preview: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=700&q=80',
-    defaults: { primary: '#49382D', secondary: '#E9E1D6', accent: '#BC9C78', hover: '#2D211B', background: '#F6F3ED', surface: '#FFFFFF', text: '#211E1B', muted: '#766D65', border: '#D9D1C8', displayFont: 'serif', bodyFont: 'sans', headingScale: 'large', headingWeight: 'regular', bodyLineHeight: 'relaxed', letterSpacing: 'normal', density: 'comfortable', containerWidth: 'wide', gridGap: 'compact', radius: 'sharp', buttonShape: 'square', borderWidth: 'thin', shadow: 'none', motion: 'subtle' },
+    defaults: { primary: '#463A32', secondary: '#E8E0D5', accent: '#AD8F6D', hover: '#2E2621', background: '#F7F4EE', surface: '#FFFFFF', text: '#26221E', muted: '#6F675E', border: '#D9D0C5', displayFont: 'serif', bodyFont: 'sans', headingScale: 'large', headingWeight: 'regular', bodyLineHeight: 'relaxed', letterSpacing: 'normal', density: 'comfortable', containerWidth: 'wide', gridGap: 'compact', radius: 'sharp', buttonShape: 'square', borderWidth: 'thin', shadow: 'none', motion: 'subtle' },
   },
 ];
 
