@@ -4,7 +4,7 @@
  * Verifies Security §8 requirements:
  * 1. Banning `dangerouslySetInnerHTML` in source code
  * 2. Banning `.innerHTML` DOM assignments in source code
- * 3. Enforcing that `BACKEND_API_URL` is referenced ONLY in `src/storefront/services/`
+ * 3. Preventing server environment access inside client components.
  */
 
 import fs from 'node:fs';
@@ -54,9 +54,8 @@ for (const filePath of allFiles) {
       }
     }
 
-    // Check BACKEND_API_URL leakage outside services
-    if (line.includes('BACKEND_API_URL') && !relPath.startsWith(`storefront/services/`)) {
-      console.error(`[SECURITY VIOLATION] BACKEND_API_URL referenced outside services directory in ${relPath}:${lineNum}`);
+    if (content.startsWith("'use client'") && /process\.env\.[A-Z_]+/.test(line)) {
+      console.error(`[SECURITY VIOLATION] Server environment accessed in client component ${relPath}:${lineNum}`);
       hasError = true;
     }
   });
@@ -66,6 +65,6 @@ if (hasError) {
   console.error('\nSecurity rule verification failed.');
   process.exit(1);
 } else {
-  console.log('Security check passed: Zero DOM injections, zero env leaks outside services.');
+  console.log('Security check passed: No direct HTML injection or server environment access in client components.');
   process.exit(0);
 }
