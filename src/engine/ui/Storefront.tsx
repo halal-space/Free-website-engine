@@ -56,7 +56,12 @@ export function Storefront({ snapshot, plan, basePath, demo }: Props) {
         <div className="sf-header-inner">
           <Link className="sf-logo" href={path(basePath, '/')}>{merchant.logoText}</Link>
           <nav className="sf-nav" aria-label="Main navigation">
-            {config.navigation.map(item => <Link key={item.href} href={path(basePath, item.href)}>{item.label}</Link>)}
+            {config.navigation.map(item => {
+              const active = item.href === '/shop'
+                ? ['shop', 'collection', 'product'].includes(plan.route.kind)
+                : item.href === `/${plan.route.kind}`;
+              return <Link key={item.href} href={path(basePath, item.href)} aria-current={active ? 'page' : undefined}>{item.label}</Link>;
+            })}
           </nav>
           <div className="sf-header-actions">
             <Link href={path(basePath, '/search')} aria-label="Search products"><Search size={19} strokeWidth={1.7} /></Link>
@@ -75,7 +80,7 @@ export function Storefront({ snapshot, plan, basePath, demo }: Props) {
       {plan.route.kind === 'checkout' && <CheckoutPage storeId={merchant.id} products={snapshot.products} basePath={basePath} demo={demo} />}
       {plan.route.kind === 'confirmation' && <ConfirmationPage storeId={merchant.id} basePath={basePath} demo={demo} />}
       {plan.route.kind === 'tracking' && <TrackingPage storeId={merchant.id} demo={demo} />}
-      {plan.route.kind === 'policy' && <SimplePage eyebrow="The details" title={plan.title}><p>{plan.policy}</p></SimplePage>}
+      {plan.route.kind === 'policy' && <SimplePage title={plan.title}><p>{plan.policy}</p></SimplePage>}
       <footer className="sf-footer">
         <div className="sf-footer-main">
           <div><Link className="sf-footer-logo" href={path(basePath, '/')}>{merchant.logoText}</Link><p>{merchant.tagline}</p></div>
@@ -106,30 +111,30 @@ function Hero({ section, themeId, basePath, merchantName }: { section: SectionCo
   const lines = (section.title || '').split('\n');
   const image = section.image || '';
   if (themeId === 'precision') return <section className="sf-hero sf-hero-precision">
-    <div className="sf-hero-copy"><span className="sf-eyebrow">{merchantName} / The edit</span><h1>{lines.map((line, index) => <span key={index}>{line}<br /></span>)}</h1><p>{section.text}</p><Link className="sf-button sf-button-light" href={path(basePath, '/shop')}>Explore the collection <ArrowUpRight size={18} /></Link><span className="sf-hero-number">01 / Explore the collection</span></div>
+    <div className="sf-hero-copy"><h1>{lines.map((line, index) => <span key={index}>{line}<br /></span>)}</h1><p>{section.text}</p><Link className="sf-button sf-button-light" href={path(basePath, '/shop')}>Explore the collection <ArrowUpRight size={18} /></Link></div>
     <div className="sf-hero-image"><StoreImage src={image} alt="" fill priority sizes="(max-width: 760px) 100vw, 55vw" /></div>
   </section>;
   if (themeId === 'editorial') return <section className="sf-hero sf-hero-editorial">
     <StoreImage src={image} alt="" fill priority sizes="100vw" />
-    <div className="sf-hero-copy"><span className="sf-eyebrow">{merchantName} · The collection</span><h1>{lines.map((line, index) => <span key={index}>{line}<br /></span>)}</h1><p>{section.text}</p><Link className="sf-text-link sf-text-link-light" href={path(basePath, '/shop')}>Discover the collection <ArrowRight size={19} /></Link></div>
+    <div className="sf-hero-copy"><h1>{lines.map((line, index) => <span key={index}>{line}<br /></span>)}</h1><p>{section.text}</p><Link className="sf-text-link sf-text-link-light" href={path(basePath, '/shop')}>Discover the collection <ArrowRight size={19} /></Link></div>
     <span className="sf-hero-side">{merchantName}</span>
   </section>;
   return <section className="sf-hero sf-hero-playful">
-    <div className="sf-hero-copy"><span className="sf-eyebrow">Welcome to {merchantName}</span><h1>{lines.map((line, index) => <span key={index}>{line}<br /></span>)}</h1><p>{section.text}</p><Link className="sf-button" href={path(basePath, '/shop')}>Explore the collection <ArrowUpRight size={18} /></Link><span className="sf-hero-signoff" aria-hidden="true">01 / Discover</span></div>
+    <div className="sf-hero-copy"><h1>{lines.map((line, index) => <span key={index}>{line}<br /></span>)}</h1><p>{section.text}</p><Link className="sf-button" href={path(basePath, '/shop')}>Explore the collection <ArrowUpRight size={18} /></Link></div>
     <div className="sf-hero-image"><StoreImage src={image} alt="" fill priority sizes="(max-width: 760px) 100vw, 50vw" /></div>
   </section>;
 }
 
-function SectionHeading({ eyebrow, title, href, basePath }: { eyebrow: string; title: string; href?: string; basePath: string }) {
-  return <div className="sf-section-heading"><div><span className="sf-eyebrow">{eyebrow}</span><h2>{title}</h2></div>{href && <Link className="sf-text-link" href={path(basePath, href)}>View all <ArrowUpRight size={18} /></Link>}</div>;
+function SectionHeading({ title, href, basePath }: { title: string; href?: string; basePath: string }) {
+  return <div className="sf-section-heading"><h2>{title}</h2>{href && <Link className="sf-text-link" href={path(basePath, href)}>View all <ArrowUpRight size={18} /></Link>}</div>;
 }
 
 function Collections({ collections, title, basePath, themeId }: { collections: Collection[]; title: string; basePath: string; themeId: ThemeId }) {
-  return <section className={`sf-section sf-collections sf-collections-${themeId}`}><div className="sf-container"><SectionHeading eyebrow="Explore by category" title={title} basePath={basePath} href="/shop" /><div className="sf-collection-grid">{collections.map((item, index) => <Link key={item.id} className="sf-collection-card" href={path(basePath, `/collections/${item.slug}`)}><div className="sf-collection-image"><StoreImage src={item.image} alt="" fill sizes="(max-width: 700px) 80vw, 33vw" /></div><div className="sf-collection-caption"><span className="sf-collection-index">0{index + 1}</span><div><h3>{item.name}</h3><p>{item.description}</p></div><ArrowUpRight size={19} /></div></Link>)}</div></div></section>;
+  return <section className={`sf-section sf-collections sf-collections-${themeId}`}><div className="sf-container"><SectionHeading title={title} basePath={basePath} href="/shop" /><div className="sf-collection-grid">{collections.map(item => <Link key={item.id} className="sf-collection-card" href={path(basePath, `/collections/${item.slug}`)}><div className="sf-collection-image"><StoreImage src={item.image} alt="" fill sizes="(max-width: 700px) 80vw, 33vw" /></div><div className="sf-collection-caption"><div><h3>{item.name}</h3><p>{item.description}</p></div><ArrowUpRight size={19} /></div></Link>)}</div></div></section>;
 }
 
 function ProductSection({ products, title, basePath, themeId }: { products: Product[]; title: string; basePath: string; themeId: ThemeId }) {
-  return <section className="sf-section sf-products"><div className="sf-container"><SectionHeading eyebrow="The selection" title={title} href="/shop" basePath={basePath} /><div className={`sf-product-grid sf-product-grid-${themeId}`}>{products.map(product => <ProductCard key={product.id} product={product} basePath={basePath} />)}</div></div></section>;
+  return <section className="sf-section sf-products"><div className="sf-container"><SectionHeading title={title} href="/shop" basePath={basePath} /><div className={`sf-product-grid sf-product-grid-${themeId}`}>{products.map(product => <ProductCard key={product.id} product={product} basePath={basePath} />)}</div></div></section>;
 }
 
 function ProductCard({ product, basePath }: { product: Product; basePath: string }) {
@@ -137,33 +142,33 @@ function ProductCard({ product, basePath }: { product: Product; basePath: string
 }
 
 function Story({ merchant, section, basePath }: { merchant: StorefrontSnapshot['merchant']; section: SectionConfig; basePath: string }) {
-  return <section className="sf-story"><div className="sf-container sf-story-inner"><span className="sf-eyebrow">A note from us</span><h2>{section.title}</h2><p>{section.text || merchant.about}</p><Link className="sf-text-link" href={path(basePath, '/about')}>Get to know us <ArrowUpRight size={18} /></Link></div></section>;
+  return <section className="sf-story"><div className="sf-container sf-story-inner"><h2>{section.title}</h2><p>{section.text || merchant.about}</p><Link className="sf-text-link" href={path(basePath, '/about')}>Get to know us <ArrowUpRight size={18} /></Link></div></section>;
 }
 
 function Catalog({ plan, basePath, themeId }: { plan: PagePlan; basePath: string; themeId: ThemeId }) {
-  return <main><div className={`sf-page-intro sf-page-intro-${themeId}`}><div className="sf-container"><span className="sf-eyebrow">{plan.collection ? 'The collection' : 'Explore everything'}</span><h1>{plan.title}</h1><p>{plan.collection?.description || 'Discover the full collection.'}</p></div></div><div className="sf-container sf-catalog"><div className="sf-catalog-bar"><span>{plan.products.length} products</span><Link href={path(basePath, '/shop')}>All products</Link></div>{plan.products.length ? <div className={`sf-product-grid sf-product-grid-${themeId}`}>{plan.products.map(product => <ProductCard key={product.id} product={product} basePath={basePath} />)}</div> : <p className="sf-empty">There are no products here yet.</p>}</div></main>;
+  return <main><div className={`sf-page-intro sf-page-intro-${themeId}`}><div className="sf-container"><h1>{plan.title}</h1><p>{plan.collection?.description || 'Discover the full collection.'}</p></div></div><div className="sf-container sf-catalog"><div className="sf-catalog-bar"><span>{plan.products.length} products</span><Link href={path(basePath, '/shop')}>All products</Link></div>{plan.products.length ? <div className={`sf-product-grid sf-product-grid-${themeId}`}>{plan.products.map(product => <ProductCard key={product.id} product={product} basePath={basePath} />)}</div> : <p className="sf-empty">There are no products here yet.</p>}</div></main>;
 }
 
 function ProductDetail({ product, products, basePath, themeId }: { product: Product; products: Product[]; basePath: string; themeId: ThemeId }) {
   const related = products.filter(p => p.id !== product.id).slice(0, 3);
-  return <main><div className={`sf-container sf-detail sf-detail-${themeId}`}><div className="sf-detail-gallery"><div className="sf-detail-image"><StoreImage src={product.image} alt={product.name} fill priority sizes="(max-width: 760px) 100vw, 55vw" /></div></div><div className="sf-detail-info"><Link className="sf-back-link" href={path(basePath, '/shop')}>← Back to shop</Link><span className="sf-eyebrow">Thoughtfully selected</span><h1>{product.name}</h1><div className="sf-detail-price">{money(product)}</div><p>{product.description}</p><div className="sf-detail-rule" /><p className="sf-stock">{product.available ? '● Available now' : 'Currently unavailable'}</p><AddToCart storeId={product.storeId} product={product} large /><div className="sf-detail-note">Shipping and payment details are confirmed at checkout.</div></div></div>{related.length > 0 && <ProductSection products={related} title="You may also like" basePath={basePath} themeId={themeId} />}</main>;
+  return <main><div className={`sf-container sf-detail sf-detail-${themeId}`}><div className="sf-detail-gallery"><div className="sf-detail-image"><StoreImage src={product.image} alt={product.name} fill priority sizes="(max-width: 760px) 100vw, 55vw" /></div></div><div className="sf-detail-info"><Link className="sf-back-link" href={path(basePath, '/shop')}>← Back to shop</Link><h1>{product.name}</h1><div className="sf-detail-price">{money(product)}</div><p>{product.description}</p><div className="sf-detail-rule" /><p className="sf-stock">{product.available ? '● Available now' : 'Currently unavailable'}</p><AddToCart storeId={product.storeId} product={product} large /><div className="sf-detail-note">Shipping and payment details are confirmed at checkout.</div></div></div>{related.length > 0 && <ProductSection products={related} title="You may also like" basePath={basePath} themeId={themeId} />}</main>;
 }
 
 function About({ snapshot }: { snapshot: StorefrontSnapshot }) {
   const image = snapshot.config.homepage.find(section => section.kind === 'hero')?.image;
-  return <main className="sf-about"><div className="sf-container sf-about-grid"><div className="sf-about-copy"><span className="sf-eyebrow">Behind the store</span><h1>Our story</h1><p className="sf-about-lead">{snapshot.merchant.tagline}</p><p>{snapshot.merchant.about}</p></div>{image && <div className="sf-about-image"><StoreImage src={image} alt="" fill sizes="(max-width: 700px) 100vw, 50vw" /></div>}</div></main>;
+  return <main className="sf-about"><div className="sf-container sf-about-grid"><div className="sf-about-copy"><h1>Our story</h1><p className="sf-about-lead">{snapshot.merchant.tagline}</p><p>{snapshot.merchant.about}</p></div>{image && <div className="sf-about-image"><StoreImage src={image} alt="" fill sizes="(max-width: 700px) 100vw, 50vw" /></div>}</div></main>;
 }
 
 function Contact({ snapshot }: { snapshot: StorefrontSnapshot }) {
-  return <main className="sf-contact"><div className="sf-container sf-contact-grid"><div><span className="sf-eyebrow">We are here to help</span><h1>Let&apos;s talk</h1><p>A question about your order or something you have seen? We would love to hear from you.</p></div><div className="sf-contact-card"><span className="sf-eyebrow">Get in touch</span><a className="sf-contact-email" href={`mailto:${snapshot.merchant.email}`}>{snapshot.merchant.email} <ArrowUpRight size={23} /></a>{snapshot.merchant.location && <p>{snapshot.merchant.location}</p>}<a className="sf-button" href={`mailto:${snapshot.merchant.email}`}>Email us <ArrowUpRight size={18} /></a></div></div></main>;
+  return <main className="sf-contact"><div className="sf-container sf-contact-grid"><div><h1>Let&apos;s talk</h1><p>A question about your order or something you have seen? We would love to hear from you.</p></div><div className="sf-contact-card"><span className="sf-eyebrow">Get in touch</span><a className="sf-contact-email" href={`mailto:${snapshot.merchant.email}`}>{snapshot.merchant.email} <ArrowUpRight size={23} /></a>{snapshot.merchant.location && <p>{snapshot.merchant.location}</p>}<a className="sf-button" href={`mailto:${snapshot.merchant.email}`}>Email us <ArrowUpRight size={18} /></a></div></div></main>;
 }
 
 function SearchResults({ plan, basePath, themeId }: { plan: PagePlan; basePath: string; themeId: ThemeId }) {
   const query = plan.route.query?.trim() || '';
   const matches = query ? plan.products.filter(p => `${p.name} ${p.description}`.toLowerCase().includes(query.toLowerCase())) : [];
-  return <main className="sf-container sf-search-page"><span className="sf-eyebrow">Find your next favourite</span><h1>Search</h1><form action={path(basePath, '/search')}><label htmlFor="sf-search-input">Search products</label><div className="sf-search-field"><input id="sf-search-input" name="q" type="search" defaultValue={query} placeholder="What are you looking for?" required /><button type="submit" aria-label="Submit search"><Search size={20} /></button></div></form><p className="sf-search-result-count">{query ? `${matches.length} result${matches.length === 1 ? '' : 's'} for “${query}”` : 'Enter a product name to search.'}</p>{matches.length > 0 && <div className={`sf-product-grid sf-product-grid-${themeId}`}>{matches.map(product => <ProductCard key={product.id} product={product} basePath={basePath} />)}</div>}</main>;
+  return <main className="sf-container sf-search-page"><h1>Search</h1><form action={path(basePath, '/search')}><label htmlFor="sf-search-input">Search products</label><div className="sf-search-field"><input id="sf-search-input" name="q" type="search" defaultValue={query} placeholder="What are you looking for?" required /><button type="submit" aria-label="Submit search"><Search size={20} /></button></div></form><p className="sf-search-result-count">{query ? `${matches.length} result${matches.length === 1 ? '' : 's'} for “${query}”` : 'Enter a product name to search.'}</p>{matches.length > 0 && <div className={`sf-product-grid sf-product-grid-${themeId}`}>{matches.map(product => <ProductCard key={product.id} product={product} basePath={basePath} />)}</div>}</main>;
 }
 
-export function SimplePage({ eyebrow, title, children }: { eyebrow: string; title: string; children: React.ReactNode }) {
-  return <main className="sf-simple-page"><div className="sf-container"><span className="sf-eyebrow">{eyebrow}</span><h1>{title}</h1><div className="sf-simple-content">{children}</div></div></main>;
+export function SimplePage({ title, children }: { title: string; children: React.ReactNode }) {
+  return <main className="sf-simple-page"><div className="sf-container"><h1>{title}</h1><div className="sf-simple-content">{children}</div></div></main>;
 }
