@@ -10,6 +10,7 @@ export function parseStorefrontRoute(segments: string[], query = ''): PageRoute 
     if (head === 'about') return { kind: 'about' };
     if (head === 'contact') return { kind: 'contact' };
     if (head === 'search') return { kind: 'search', query };
+    if (head === 'favorites') return { kind: 'favorites' };
     if (head === 'cart') return { kind: 'cart' };
     if (head === 'checkout') return { kind: 'checkout' };
     if (head === 'track-order') return { kind: 'tracking' };
@@ -39,7 +40,7 @@ export function assemblePage(snapshot: StorefrontSnapshot, route: PageRoute): Pa
   if (route.kind === 'policy' && !policy) return null;
 
   const pageProducts = route.kind === 'collection' && collection
-    ? products.filter(p => p.collectionId === collection.id)
+    ? products.filter(p => p.collectionId === collection.id || p.collectionIds?.includes(collection.id))
     : route.kind === 'home' ? products.filter(p => p.featured) : products;
 
   const sectionList: SectionConfig[] = route.kind === 'home'
@@ -47,7 +48,7 @@ export function assemblePage(snapshot: StorefrontSnapshot, route: PageRoute): Pa
     : [];
   const title = product?.name ?? collection?.name ?? ({
     home: merchant.name, shop: 'Shop', about: 'Our story', contact: 'Contact',
-    search: 'Search', cart: 'Your bag', checkout: 'Checkout', confirmation: 'Order confirmation',
+    search: 'Search', favorites: 'Favorites', cart: 'Your bag', checkout: 'Checkout', confirmation: 'Order confirmation',
     tracking: 'Track an order', policy: route.slug ? titleCase(route.slug) : 'Policy',
     collection: 'Collection', product: 'Product',
   } satisfies Record<PageRoute['kind'], string>)[route.kind];

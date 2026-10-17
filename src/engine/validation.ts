@@ -1,4 +1,4 @@
-import type { StorefrontSnapshot } from './types';
+import type { StorefrontSnapshot, ThemeId } from './types';
 import { THEME_IDS } from './theme-registry';
 
 const STORE_ID = /^[a-z0-9](?:[a-z0-9-]{0,62}[a-z0-9])?$/;
@@ -6,7 +6,8 @@ const SLUG = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const CURRENCY = /^[A-Z]{3}$/;
 const HOST = /^(?=.{1,253}$)[a-z0-9.-]+$/;
 const HEX_COLOR = /^#[0-9a-fA-F]{6}$/;
-const SECTIONS = new Set(['hero', 'featured', 'collections', 'story', 'announcement']);
+const SECTIONS = new Set(['hero', 'discovery', 'featured', 'collections', 'story', 'announcement']);
+const LEGACY_THEME_IDS: Record<string, ThemeId> = { playful: 'm1', precision: 'g2', editorial: 'c3' };
 
 function record(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -16,6 +17,7 @@ function nonEmpty(value: unknown): value is string {
 }
 function safeImage(value: unknown): boolean {
   if (!nonEmpty(value)) return false;
+  if (/^\/storefront-demo\/[a-z0-9-]+\.png$/.test(value)) return true;
   try {
     const url = new URL(value);
     return url.protocol === 'https:' && !url.username && !url.password;
@@ -50,6 +52,18 @@ export function normalizeHost(raw: string): string | null {
 
 export function isValidStoreId(value: string): boolean { return STORE_ID.test(value); }
 
+export function parseSnapshot(value: unknown, expectedStoreId: string): StorefrontSnapshot {
+  // Version 1 shipped with three theme names. Preserve its merchant content and
+  // tokens while mapping only those known names into the nine-theme registry.
+  if (record(value) && record(value.config) && value.config.schemaVersion === 1) {
+    const oldTheme = String(value.config.themeId);
+    const themeId = LEGACY_THEME_IDS[oldTheme] ?? oldTheme;
+    value = { ...value, config: { ...value.config, schemaVersion: 2, themeId } };
+  }
+  assertSnapshot(value, expectedStoreId);
+  return value;
+}
+
 export function assertSnapshot(value: unknown, expectedStoreId: string): asserts value is StorefrontSnapshot {
   if (!record(value)) throw new Error('Invalid storefront response');
   const { merchant, config, products, collections } = value;
@@ -67,7 +81,7 @@ export function assertSnapshot(value: unknown, expectedStoreId: string): asserts
     || Object.values(merchant.policies).some(policy => typeof policy !== 'string')) {
     throw new Error('Invalid merchant data');
   }
-  if (config.schemaVersion !== 1 || typeof config.publishedVersion !== 'number' || !Number.isInteger(config.publishedVersion) || config.publishedVersion < 1 || !Array.isArray(config.homepage)
+  if (config.schemaVersion !== 2 || typeof config.publishedVersion !== 'number' || !Number.isInteger(config.publishedVersion) || config.publishedVersion < 1 || !Array.isArray(config.homepage)
     || !record(config.seo) || !nonEmpty(config.seo.description) || !record(config.tokens)) {
     throw new Error('Unsupported storefront configuration');
   }
@@ -98,6 +112,9 @@ export function assertSnapshot(value: unknown, expectedStoreId: string): asserts
     || config.homepage.some(s => !record(s) || !nonEmpty(s.id) || !SECTIONS.has(String(s.kind))
     || typeof s.enabled !== 'boolean' || (s.title !== undefined && typeof s.title !== 'string')
     || (s.text !== undefined && typeof s.text !== 'string') || (s.image !== undefined && !safeImage(s.image))
+    || (s.eyebrow !== undefined && typeof s.eyebrow !== 'string')
+    || (s.ctaLabel !== undefined && (!nonEmpty(s.ctaLabel) || s.ctaLabel.length > 80))
+    || (s.ctaHref !== undefined && (typeof s.ctaHref !== 'string' || !/^\/(?!\/)[a-z0-9/-]*$/.test(s.ctaHref)))
     || (s.kind === 'hero' && s.enabled && (!nonEmpty(s.title) || !safeImage(s.image))))
     || !Array.isArray(config.navigation)
     || config.navigation.some(link => !record(link) || !nonEmpty(link.label)
@@ -109,14 +126,17 @@ export function assertSnapshot(value: unknown, expectedStoreId: string): asserts
     || !nonEmpty(p.name) || !CURRENCY.test(String(p.currency)) || p.currency !== merchant.currency || !safeImage(p.image)
     || !Number.isInteger(p.priceMinor) || Number(p.priceMinor) < 0 || !Array.isArray(p.images)
     || p.images.some((image: unknown) => !safeImage(image)) || typeof p.available !== 'boolean'
-    || !nonEmpty(p.collectionId))
+    || !nonEmpty(p.collectionId) || (p.collectionIds !== undefined && (!Array.isArray(p.collectionIds)
+      || p.collectionIds.some((id: unknown) => !nonEmpty(id)) || new Set(p.collectionIds).size !== p.collectionIds.length)))
     || collections.some(c => !record(c) || c.storeId !== expectedStoreId || !nonEmpty(c.id)
-      || !SLUG.test(String(c.slug)) || !nonEmpty(c.name) || !safeImage(c.image))
+      || !SLUG.test(String(c.slug)) || !nonEmpty(c.name) || !safeImage(c.image)
+      || (c.placement !== undefined && !['category', 'discovery'].includes(String(c.placement))))
     || new Set(products.map(p => record(p) ? p.id : undefined)).size !== products.length
     || new Set(products.map(p => record(p) ? p.slug : undefined)).size !== products.length
     || new Set(collections.map(c => record(c) ? c.id : undefined)).size !== collections.length
     || new Set(collections.map(c => record(c) ? c.slug : undefined)).size !== collections.length
-    || products.some(p => record(p) && !collections.some(c => record(c) && c.id === p.collectionId))) {
+    || products.some(p => record(p) && (!collections.some(c => record(c) && c.id === p.collectionId)
+      || (Array.isArray(p.collectionIds) && p.collectionIds.some(id => !collections.some(c => record(c) && c.id === id)))))) {
     throw new Error('Invalid or cross-tenant catalog data');
   }
 }

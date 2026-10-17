@@ -1,9 +1,9 @@
 import { MOCK_STORES } from './mock-data';
 import { getMockPublishedSnapshot } from './mock-publishing';
-import { assertSnapshot, isValidStoreId, normalizeHost } from './validation';
+import { isValidStoreId, normalizeHost, parseSnapshot } from './validation';
 import type { StorefrontSnapshot } from './types';
 
-export { assertSnapshot, isValidStoreId, normalizeHost } from './validation';
+export { assertSnapshot, isValidStoreId, normalizeHost, parseSnapshot } from './validation';
 
 export interface StorefrontDataSource {
   resolveHost(host: string): Promise<string | null>;
@@ -47,8 +47,7 @@ export class ApiStorefrontDataSource implements StorefrontDataSource {
     if (!isValidStoreId(storeId)) return null;
     const value = await this.withTimeout(signal => this.gateway.getPublishedStorefront(storeId, signal));
     if (value === null) return null;
-    assertSnapshot(value, storeId);
-    return value;
+    return parseSnapshot(value, storeId);
   }
 
   private async withTimeout<T>(operation: (signal: AbortSignal) => Promise<T>): Promise<T> {

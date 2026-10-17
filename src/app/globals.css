@@ -1,4 +1,5 @@
 @import '../engine/ui/storefront.css';
+@import '../engine/ui/theme-compositions.css';
 @import '../engine/ui/studio.css';
 
 * { box-sizing: border-box; }

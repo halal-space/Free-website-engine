@@ -1,10 +1,10 @@
-export type ThemeId = 'playful' | 'precision' | 'editorial';
+export type ThemeId = 'm1' | 'm2' | 'm3' | 'g1' | 'g2' | 'g3' | 'c1' | 'c2' | 'c3';
 
 export type PageKind =
   | 'home' | 'shop' | 'collection' | 'product' | 'about' | 'contact'
-  | 'search' | 'cart' | 'checkout' | 'confirmation' | 'tracking' | 'policy';
+  | 'search' | 'favorites' | 'cart' | 'checkout' | 'confirmation' | 'tracking' | 'policy';
 
-export type SectionKind = 'hero' | 'featured' | 'collections' | 'story' | 'announcement';
+export type SectionKind = 'hero' | 'discovery' | 'featured' | 'collections' | 'story' | 'announcement';
 
 export interface DesignTokens {
   primary: string;
@@ -39,11 +39,14 @@ export interface SectionConfig {
   title?: string;
   text?: string;
   image?: string;
+  eyebrow?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
   collectionId?: string;
 }
 
 export interface StorefrontConfig {
-  schemaVersion: 1;
+  schemaVersion: 2;
   storeId: string;
   publishedVersion: number;
   themeId: ThemeId;
@@ -64,6 +67,7 @@ export interface Product {
   image: string;
   images: string[];
   collectionId: string;
+  collectionIds?: string[];
   variantLabel?: string;
   available: boolean;
   featured?: boolean;
@@ -76,6 +80,7 @@ export interface Collection {
   name: string;
   description: string;
   image: string;
+  placement?: 'category' | 'discovery';
 }
 
 export interface Merchant {

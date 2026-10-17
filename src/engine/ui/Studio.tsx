@@ -1,9 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import { ArrowDown, ArrowUp, Check, ChevronRight, ExternalLink, Eye, LayoutTemplate, Monitor, Palette, PanelsTopLeft, RotateCcw, Smartphone, Tablet, UploadCloud } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { THEMES, THEME_DEFAULTS } from '../theme-registry';
-import { assertSnapshot, contrastRatio } from '../validation';
+import { contrastRatio, parseSnapshot } from '../validation';
 import type { DesignTokens, SectionConfig, StorefrontConfig, StorefrontSnapshot } from '../types';
 
 type Step = 'theme' | 'brand' | 'homepage' | 'review';
@@ -25,6 +26,7 @@ export function Studio({ stores, canPublish }: { stores: Record<string, Storefro
   const [step, setStep] = useState<Step>('theme');
   const [device, setDevice] = useState<Device>('desktop');
   const [draft, setDraft] = useState<StorefrontConfig>(stores[storeIds[0]].config);
+  const [draftStoreId, setDraftStoreId] = useState(storeIds[0]);
   const [publishedConfig, setPublishedConfig] = useState<StorefrontConfig>(stores[storeIds[0]].config);
   const [publishedVersion, setPublishedVersion] = useState(stores[storeIds[0]].config.publishedVersion);
   const [message, setMessage] = useState('');
@@ -47,21 +49,24 @@ export function Studio({ stores, canPublish }: { stores: Record<string, Storefro
       const raw = localStorage.getItem(STORAGE_PREFIX + storeId);
       if (raw) {
         const parsed: unknown = JSON.parse(raw);
-        const candidate = { ...current, config: parsed };
-        assertSnapshot(candidate, storeId);
+        const candidate = parseSnapshot({ ...current, config: parsed }, storeId);
         next = candidate.config;
       }
     } catch { /* A corrupt local draft falls back to published configuration. */ }
     setDraft(next);
+    setDraftStoreId(storeId);
     setPublishedConfig(current.config);
     setPublishedVersion(current.config.publishedVersion);
     setMessage('');
   }, [storeId, stores]);
 
   useEffect(() => {
+    // Switching merchants renders once with the previous draft. Never persist
+    // that draft under the newly selected merchant's storage key.
+    if (draftStoreId !== storeId || draft.storeId !== storeId) return;
     try { localStorage.setItem(STORAGE_PREFIX + storeId, JSON.stringify(draft)); }
     catch { /* The editor still works for this session if storage is unavailable. */ }
-  }, [draft, storeId]);
+  }, [draft, draftStoreId, storeId]);
 
   const sendPreview = useCallback(() => {
     frame.current?.contentWindow?.postMessage({ type: 'rooqx-preview', storeId, config: draft }, window.location.origin);
@@ -99,7 +104,7 @@ export function Studio({ stores, canPublish }: { stores: Record<string, Storefro
   return <div className="studio">
     <header className="studio-topbar"><div className="studio-brand"><span className="studio-mark">R.</span><span>Rooqx <strong>Storefront Studio</strong></span></div><div className="studio-top-actions"><label className="studio-store-select">Preview store <select value={storeId} onChange={event => setStoreId(event.target.value)}>{storeIds.map(id => <option key={id} value={id}>{stores[id].merchant.name}</option>)}</select></label><span className={`studio-status ${hasDraftChanges ? 'is-draft' : ''}`} aria-live="polite"><span aria-hidden="true" /> {hasDraftChanges ? 'Unpublished draft' : 'Published design'} · v{publishedVersion}</span><a className="studio-open-link" href={basePath} target="_blank" rel="noopener noreferrer">Open storefront <ExternalLink size={15} /></a></div></header>
     <div className="studio-body"><aside className="studio-sidebar" id="studio-editor"><div className="studio-intro"><h1>Make a great first impression.</h1><p>Choose a look, add your voice, and see it come to life. Your products stay right where they are.</p><a className="studio-preview-jump" href="#studio-preview">View live preview <ArrowDown size={15} /></a></div><nav className="studio-steps" aria-label="Store setup steps">{STEPS.map((item, index) => <button key={item.id} type="button" className={`studio-step ${step === item.id ? 'active' : ''}`} onClick={() => setStep(item.id)}><span className="studio-step-number">0{index + 1}</span><span><strong>{item.name}</strong><small>{item.hint}</small></span><ChevronRight size={16} /></button>)}</nav><div className="studio-panel">
-      {step === 'theme' && <><div className="studio-panel-title"><h2>Choose a look</h2><p>Three considered directions. See each one with your own products.</p></div><div className="studio-theme-list">{THEMES.map(item => <button type="button" key={item.id} aria-pressed={draft.themeId === item.id} className={`studio-theme ${draft.themeId === item.id ? 'selected' : ''}`} onClick={() => setDraft(current => ({ ...current, themeId: item.id, tokens: THEME_DEFAULTS[item.id] }))}><span className="studio-theme-art" style={{ backgroundImage: `url('${item.preview}')` }} /><span className="studio-theme-copy"><strong>{item.name}</strong><small>{item.description}</small><em>{item.detail}</em></span><span className="studio-theme-check">{draft.themeId === item.id && <Check size={15} />}</span></button>)}</div></>}
+      {step === 'theme' && <><div className="studio-panel-title"><h2>Choose a look</h2><p>Nine designs for your products. The groups are inspiration, so any store can use any design.</p></div><div className="studio-theme-list">{(['care', 'tech', 'fashion'] as const).map(family => <section className="studio-theme-group" key={family} aria-label={`${family} inspired designs`}><h3>{family === 'care' ? 'Mothercare inspired' : family === 'tech' ? 'Gadget inspired' : 'Clothing inspired'}</h3>{THEMES.filter(item => item.family === family).map(item => <button type="button" key={item.id} aria-pressed={draft.themeId === item.id} className={`studio-theme ${draft.themeId === item.id ? 'selected' : ''}`} onClick={() => setDraft(current => ({ ...current, themeId: item.id, tokens: THEME_DEFAULTS[item.id] }))}><span className="studio-theme-art"><Image src={item.preview} alt="" fill sizes="104px" /></span><span className="studio-theme-copy"><strong>{item.name}</strong><small>{item.description}</small><em>{item.detail}</em></span><span className="studio-theme-check">{draft.themeId === item.id && <Check size={15} />}</span></button>)}</section>)}</div></>}
       {step === 'brand' && <>
         <div className="studio-panel-title"><h2>Make it yours</h2><p>A few thoughtful choices make the design feel like your business.</p></div>
         <div className="studio-fields">
@@ -132,7 +137,7 @@ export function Studio({ stores, canPublish }: { stores: Record<string, Storefro
         </div>
       </>}
 
-      {step === 'homepage' && <><div className="studio-panel-title"><h2>Shape the homepage</h2><p>Turn sections on or off and arrange them in the order that tells your story.</p></div><div className="studio-section-list">{draft.homepage.map((section, index) => <div className="studio-section-row" key={section.id}><div><strong>{section.kind === 'hero' ? 'Opening banner' : section.kind === 'featured' ? 'Featured products' : section.kind === 'collections' ? 'Collections' : 'Your story'}</strong><label><input type="checkbox" checked={section.enabled} onChange={event => updateSection(section.id, { enabled: event.target.checked })} /> Show section</label></div><div className="studio-order"><button type="button" disabled={index === 0} aria-label={`Move ${section.kind} up`} onClick={() => moveSection(index, -1)}><ArrowUp size={16} /></button><button type="button" disabled={index === draft.homepage.length - 1} aria-label={`Move ${section.kind} down`} onClick={() => moveSection(index, 1)}><ArrowDown size={16} /></button></div></div>)}</div><div className="studio-fields"><h3>Opening banner</h3><label className="studio-field">Headline<textarea rows={3} maxLength={110} value={draft.homepage.find(s => s.kind === 'hero')?.title || ''} onChange={event => updateSection('hero', { title: event.target.value })} /></label><label className="studio-field">Supporting text<textarea rows={4} maxLength={250} value={draft.homepage.find(s => s.kind === 'hero')?.text || ''} onChange={event => updateSection('hero', { text: event.target.value })} /></label></div></>}
+      {step === 'homepage' && <><div className="studio-panel-title"><h2>Shape the homepage</h2><p>Turn sections on or off and arrange them in the order that tells your story.</p></div><div className="studio-section-list">{draft.homepage.map((section, index) => <div className="studio-section-row" key={section.id}><div><strong>{section.kind === 'hero' ? 'Opening banner' : section.kind === 'discovery' ? 'Shopping paths' : section.kind === 'featured' ? 'Featured products' : section.kind === 'collections' ? 'Collections' : section.kind === 'story' ? 'Your story' : 'Announcement'}</strong><label><input type="checkbox" checked={section.enabled} onChange={event => updateSection(section.id, { enabled: event.target.checked })} /> Show section</label></div><div className="studio-order"><button type="button" disabled={index === 0} aria-label={`Move ${section.kind} up`} onClick={() => moveSection(index, -1)}><ArrowUp size={16} /></button><button type="button" disabled={index === draft.homepage.length - 1} aria-label={`Move ${section.kind} down`} onClick={() => moveSection(index, 1)}><ArrowDown size={16} /></button></div></div>)}</div><div className="studio-fields"><h3>Opening banner</h3><label className="studio-field">Headline<textarea rows={3} maxLength={110} value={draft.homepage.find(s => s.kind === 'hero')?.title || ''} onChange={event => updateSection('hero', { title: event.target.value })} /></label><label className="studio-field">Supporting text<textarea rows={4} maxLength={250} value={draft.homepage.find(s => s.kind === 'hero')?.text || ''} onChange={event => updateSection('hero', { text: event.target.value })} /></label><label className="studio-field">Small label<input maxLength={80} value={draft.homepage.find(s => s.kind === 'hero')?.eyebrow || ''} onChange={event => updateSection('hero', { eyebrow: event.target.value })} /></label><label className="studio-field">Button text<input maxLength={80} value={draft.homepage.find(s => s.kind === 'hero')?.ctaLabel || ''} onChange={event => updateSection('hero', { ctaLabel: event.target.value || undefined })} /></label></div></>}
       {step === 'review' && <><div className="studio-panel-title"><h2>Ready when you are</h2><p>Check your store, then publish this design. Your existing product data stays intact.</p></div><div className="studio-checklist"><div><Check size={16} /> Theme selected: {theme.name}</div><div className={contrastOkay ? '' : 'needs-work'}><Check size={16} /> Text is easy to read</div><div className={ready ? '' : 'needs-work'}><Check size={16} /> Homepage has an opening and products</div></div><div className="studio-publish-box"><span>Current live design</span><strong>Version {publishedVersion}</strong><p>{canPublish ? 'Publishing updates the local development storefront. A production release will use the Rooqx backend.' : 'Publishing is available in the development demo. This production preview cannot change shared store data.'}</p><button type="button" disabled={!ready || busy || !canPublish} onClick={publish}><UploadCloud size={18} /> {busy ? 'Publishing…' : 'Publish demo design'}</button>{message && <p role="status">{message}</p>}</div></>}
     </div><div className="studio-sidebar-bottom"><button type="button" onClick={() => setDraft(publishedConfig)}><RotateCcw size={15} /> Reset to published design</button><span>{hasDraftChanges ? 'Changes saved locally as a draft' : 'Published design loaded'}</span></div></aside>
     <main className="studio-preview" id="studio-preview"><div className="studio-preview-bar"><div><span className="studio-live-dot" /><strong>Live preview</strong><span>{snapshot.merchant.name} · {theme.name}</span></div><div className="studio-device-switch" aria-label="Preview size">{(['desktop', 'tablet', 'mobile'] as const).map(value => { const Icon = value === 'desktop' ? Monitor : value === 'tablet' ? Tablet : Smartphone; return <button key={value} type="button" aria-label={`${value} preview`} aria-pressed={device === value} onClick={() => setDevice(value)}><Icon size={17} /></button>; })}</div></div><div className="studio-preview-stage"><iframe key={storeId} ref={frame} title={`${snapshot.merchant.name} storefront preview`} src={basePath} onLoad={sendPreview} style={{ width: DEVICE_WIDTH[device] }} /></div></main></div>
